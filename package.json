@@ -1,0 +1,150 @@
+{
+  "name": "console-samurai",
+  "displayName": "Console Samurai",
+  "description": "Inline console logs and runtime events inside VS Code.",
+  "version": "0.1.0",
+  "publisher": "console-samurai",
+  "license": "ISC",
+  "engines": {
+    "vscode": "^1.86.0"
+  },
+  "categories": [
+    "Debuggers",
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:consoleSamurai.start",
+    "onCommand:consoleSamurai.stop",
+    "onCommand:consoleSamurai.showOutput",
+    "onCommand:consoleSamurai.clearLogs",
+    "onCommand:consoleSamurai.toggleInline",
+    "onCommand:consoleSamurai.toggleNetwork"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "consoleSamurai.start",
+        "title": "Console Samurai: Start"
+      },
+      {
+        "command": "consoleSamurai.stop",
+        "title": "Console Samurai: Stop"
+      },
+      {
+        "command": "consoleSamurai.showOutput",
+        "title": "Console Samurai: Show Output"
+      },
+      {
+        "command": "consoleSamurai.clearLogs",
+        "title": "Console Samurai: Clear Logs"
+      },
+      {
+        "command": "consoleSamurai.toggleInline",
+        "title": "Console Samurai: Toggle Inline Logs"
+      },
+      {
+        "command": "consoleSamurai.toggleNetwork",
+        "title": "Console Samurai: Toggle Network Logging"
+      }
+    ],
+    "configuration": {
+      "title": "Console Samurai",
+      "properties": {
+        "console-samurai.autoStart": {
+          "type": "boolean",
+          "default": true,
+          "description": "Start the Console Samurai server automatically."
+        },
+        "console-samurai.host": {
+          "type": "string",
+          "default": "127.0.0.1",
+          "description": "Host for the WebSocket server."
+        },
+        "console-samurai.port": {
+          "type": "number",
+          "default": 4973,
+          "description": "Port for the WebSocket server."
+        },
+        "console-samurai.maxLogEntries": {
+          "type": "number",
+          "default": 2000,
+          "description": "Maximum number of log entries stored in memory."
+        },
+        "console-samurai.inline.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inline console output in editors."
+        },
+        "console-samurai.inline.maxTextLength": {
+          "type": "number",
+          "default": 120,
+          "description": "Maximum inline text length per log entry."
+        },
+        "console-samurai.inline.showTimestamp": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include timestamps in inline log text."
+        },
+        "console-samurai.output.enabledLevels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["log", "info", "warn", "error", "debug", "trace", "time", "network"]
+          },
+          "default": ["log", "info", "warn", "error", "debug", "trace", "time", "network"],
+          "description": "Levels shown in the log viewer and output channel."
+        },
+        "console-samurai.network.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Capture network requests from browser clients."
+        },
+        "console-samurai.captureErrors": {
+          "type": "boolean",
+          "default": true,
+          "description": "Capture runtime errors and unhandled rejections."
+        },
+        "console-samurai.node.autoAttach": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically inject Console Samurai into new VS Code terminals for Node commands."
+        },
+        "console-samurai.pathMappings": {
+          "type": "array",
+          "default": [],
+          "description": "Map remote URLs to local file paths.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "urlPrefix": {
+                "type": "string"
+              },
+              "localPathPrefix": {
+                "type": "string"
+              }
+            },
+            "required": ["urlPrefix", "localPathPrefix"]
+          }
+        },
+        "console-samurai.logCaptureOptions": {
+          "type": "object",
+          "default": {
+            "maxDepth": 4,
+            "maxProps": 50,
+            "maxArray": 50,
+            "maxStringLength": 2000
+          },
+          "description": "Serialization limits for values sent by runtime clients."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ws": "^8.16.0"
+  }
+}
