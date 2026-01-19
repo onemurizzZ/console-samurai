@@ -89,6 +89,7 @@ function connect() {
     state.connected = true;
     flushQueue();
     send({ type: 'hello', client: { runtime: 'node', pid: process.pid } });
+    unrefSocket(ws);
   });
 
   ws.on('message', data => {
@@ -114,11 +115,14 @@ function connect() {
 }
 
 function retryConnect() {
-  setTimeout(() => {
+  const timer = setTimeout(() => {
     if (!state.ws) {
       connect();
     }
   }, 1500);
+  if (timer && typeof timer.unref === 'function') {
+    timer.unref();
+  }
 }
 
 function send(payload) {
@@ -404,6 +408,12 @@ function now() {
     return performance.now() / 1000;
   }
   return Date.now() / 1000;
+}
+
+function unrefSocket(ws) {
+  if (ws && ws._socket && typeof ws._socket.unref === 'function') {
+    ws._socket.unref();
+  }
 }
 
 if (state.config.autoStart) {
